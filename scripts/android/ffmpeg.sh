@@ -379,10 +379,13 @@ fi
 if [[ -z ${FFMPEG_KIT_DEBUG} ]]; then
 
   # SET LTO FLAGS
+  # FFmpeg 9.x dropped --disable-lto (LTO is off unless --enable-lto is given),
+  # so the "no LTO" branch must not pass it: configure aborts with
+  #   Unknown option "--disable-lto".
   if [[ -z ${NO_LINK_TIME_OPTIMIZATION} ]]; then
     DEBUG_OPTIONS="--disable-debug --enable-lto"
   else
-    DEBUG_OPTIONS="--disable-debug --disable-lto"
+    DEBUG_OPTIONS="--disable-debug"
   fi
 else
   DEBUG_OPTIONS="--enable-debug --disable-stripping"
