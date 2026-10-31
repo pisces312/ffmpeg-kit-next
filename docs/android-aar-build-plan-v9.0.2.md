@@ -265,6 +265,36 @@ configure 实录（从 `libavutil.so` 反解，已按 `--` 折行过滤只看关
 | JNI 保号规则 | AAR 自带 `proguard.txt`，无需额外配置 |
 | binder 回归 | next 上游已自行去掉 `setThreadPoolMaxThreadCount`，**本次构建未改任何 native 源码** |
 
+### 6.3 库自带单元测试（补跑）
+
+构建时 `testReleaseUnitTest` 因后台进程被回收没跑完（§7.5 #8），事后单独补跑：
+
+```bash
+./gradlew ffmpeg-kit-next-android-lib:testReleaseUnitTest --console=plain
+```
+
+**71 用例，0 失败，0 跳过，BUILD SUCCESSFUL（29 s）**
+
+```
+FFmpegKitConfigTest  FFmpegKitTest  FFmpegSessionTest  FFprobeSessionTest
+MediaInformationJsonParserTest  MediaInformationSessionTest  SAFProtocolUrlLifecycleTest
+```
+
+能跑通的前提是 `build.gradle` 里的 `systemProperty 'enable.ffmpegkit.test.mode', 'true'`——该开关让测试绕过 JNI 加载，因此 arm64-only 的构建也能在 x86_64 主机上跑测试。
+
+### 6.4 native 依赖闭合性
+
+`readelf -d` 逐个检查，所有 `DT_NEEDED` 均为系统库 + 内置的 `libc++_shared.so`，无外部未打包依赖：
+
+```
+libffmpegkit.so  → libavfilter libavformat libavcodec libavutil libswresample libavdevice libswscale
+                   liblog libz libandroid libc libm libdl
+libavcodec.so    → libc libm libdl liblog libandroid libcamera2ndk libmediandk libc++_shared libz
+                   libswresample libavutil
+```
+
+`libcamera2ndk.so` / `libmediandk.so` 由 API 24+ 系统提供，minSdk 26 无问题。
+
 ---
 
 ## 7. 实测记录
