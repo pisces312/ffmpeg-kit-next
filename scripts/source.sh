@@ -82,8 +82,8 @@ get_library_source() {
     SOURCE_TYPE="TAG"
     ;;
   lame)
-    SOURCE_REPO_URL="https://github.com/arthenica/lame"
-    SOURCE_ID="RELEASE__3_100"
+    SOURCE_REPO_URL="https://github.com/enzo1982/lame"
+    SOURCE_ID="RELEASE__4_0"
     SOURCE_TYPE="TAG"
     ;;
   leptonica)

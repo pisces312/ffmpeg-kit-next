@@ -20,6 +20,7 @@ emconfigure ./configure \
   --disable-frontend \
   --disable-efence \
   --disable-gtktest \
+  --disable-decoder \
   --host="${HOST}" 1>>"${BASEDIR}"/build.log 2>&1 || return 1
 
 emmake make -j$(get_cpu_count) 1>>"${BASEDIR}"/build.log 2>&1 || return 1
@@ -27,4 +28,4 @@ emmake make -j$(get_cpu_count) 1>>"${BASEDIR}"/build.log 2>&1 || return 1
 emmake make install 1>>"${BASEDIR}"/build.log 2>&1 || return 1
 
 # CREATE PACKAGE CONFIG MANUALLY
-create_libmp3lame_package_config "3.100" || return 1
+create_libmp3lame_package_config "4.0" || return 1

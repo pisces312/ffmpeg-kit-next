@@ -21,6 +21,7 @@ fi
   --disable-frontend \
   --disable-efence \
   --disable-gtktest \
+  --disable-decoder \
   --host="${HOST}" || return 1
 
 make -j$(get_cpu_count) || return 1
@@ -28,4 +29,4 @@ make -j$(get_cpu_count) || return 1
 make install || return 1
 
 # CREATE PACKAGE CONFIG MANUALLY
-create_libmp3lame_package_config "3.100" || return 1
+create_libmp3lame_package_config "4.0" || return 1
